@@ -1,0 +1,29 @@
+import AssistantChat from "./AssistantChat";
+import { Sparkles, ShieldAlert } from "lucide-react";
+
+export default function AssistantPage() {
+  return (
+    <div className="mx-auto max-w-3xl px-6 py-16">
+      <div className="text-center">
+        <span className="inline-flex items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 px-3 py-1 text-xs font-medium text-primary-600">
+          <Sparkles className="h-3.5 w-3.5" />
+          Assistant IA
+        </span>
+        <h1 className="mt-3 text-3xl font-semibold text-navy-900">Posez votre question</h1>
+        <p className="mt-2 text-muted-foreground">
+          L'assistant retrouve, explique et relie le contenu des fiches SOINELY — il n'invente rien.
+        </p>
+      </div>
+
+      <div className="mt-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 p-4 text-sm text-navy-900">
+        <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
+        <p>
+          Version de démonstration : une recherche par mots-clés dans les fiches SOINELY, pas une
+          intelligence artificielle générative.
+        </p>
+      </div>
+
+      <AssistantChat />
+    </div>
+  );
+}

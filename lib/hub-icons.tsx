@@ -1,0 +1,51 @@
+import {
+  Droplet,
+  Cross,
+  Droplets,
+  Cable,
+  TestTube,
+  Utensils,
+  CircleDot,
+  Siren,
+  HeartHandshake,
+  FileText,
+  ShieldCheck,
+  TestTubes,
+  Syringe,
+  Waves,
+  Home,
+  SprayCan,
+  GraduationCap,
+  Briefcase,
+  FileStack,
+  Calculator,
+  Sparkles,
+  type LucideIcon,
+} from "lucide-react";
+
+const iconMap: Record<string, LucideIcon> = {
+  Droplet,
+  Cross,
+  Droplets,
+  Cable,
+  TestTube,
+  Utensils,
+  CircleDot,
+  Siren,
+  HeartHandshake,
+  FileText,
+  ShieldCheck,
+  TestTubes,
+  Syringe,
+  Waves,
+  Home,
+  SprayCan,
+  GraduationCap,
+  Briefcase,
+  FileStack,
+  Calculator,
+};
+
+export function getHubIcon(name: string): LucideIcon {
+  return iconMap[name] ?? Sparkles;
+}

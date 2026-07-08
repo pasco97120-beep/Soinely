@@ -1,0 +1,373 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Service {
+  id         Int      @id @default(autoincrement())
+  nom        String
+  code       String   @unique
+  etage      Int?
+  aile       String?
+  createdAt  DateTime @default(now())
+
+  chambres    Chambre[]
+  infirmiers  Infirmier[]
+  admissions  Admission[]
+  tournees    Tournee[]
+}
+
+model Chambre {
+  id          Int      @id @default(autoincrement())
+  serviceId   Int
+  numero      String
+  nombreLits  Int      @default(1)
+  type        String   @default("simple")
+
+  service Service @relation(fields: [serviceId], references: [id], onDelete: Cascade)
+  lits    Lit[]
+
+  @@unique([serviceId, numero])
+}
+
+model Lit {
+  id         Int    @id @default(autoincrement())
+  chambreId  Int
+  numeroLit  String
+  statut     String @default("libre")
+
+  chambre    Chambre     @relation(fields: [chambreId], references: [id], onDelete: Cascade)
+  admissions Admission[]
+}
+
+model Infirmier {
+  id            Int      @id @default(autoincrement())
+  matricule     String   @unique
+  nom           String
+  prenom        String
+  sexe          String   @default("F")
+  email         String?  @unique
+  telephone     String?
+  specialite    String?
+  grade         String   @default("infirmier")
+  serviceId     Int?
+  actif         Boolean  @default(true)
+  dateEmbauche  DateTime?
+  createdAt     DateTime @default(now())
+
+  service            Service?          @relation(fields: [serviceId], references: [id])
+  utilisateur        Utilisateur?
+  tournees           Tournee[]
+  constantesVitales  ConstanteVitale[]
+  soins              Soin[]
+  transmissions      Transmission[]
+  alertes            Alerte[]
+}
+
+model Utilisateur {
+  id                 Int       @id @default(autoincrement())
+  infirmierId        Int       @unique
+  username           String    @unique
+  passwordHash       String
+  role               String    @default("infirmier")
+  derniereConnexion  DateTime?
+  actif              Boolean   @default(true)
+  createdAt          DateTime  @default(now())
+
+  infirmier Infirmier @relation(fields: [infirmierId], references: [id], onDelete: Cascade)
+}
+
+model Patient {
+  id                  Int       @id @default(autoincrement())
+  numeroDossier       String    @unique
+  nom                 String
+  prenom              String
+  sexe                String
+  dateNaissance       DateTime
+  telephone           String?
+  email               String?
+  adresse             String?
+  contactUrgenceNom   String?
+  contactUrgenceTel   String?
+  contactUrgenceLien  String?
+  groupeSanguin       String    @default("inconnu")
+  allergies           String?
+  antecedents         String?
+  notes               String?
+  createdAt           DateTime  @default(now())
+
+  admissions Admission[]
+}
+
+model Admission {
+  id                   Int       @id @default(autoincrement())
+  patientId            Int
+  serviceId            Int
+  litId                Int?
+  medecinResponsable   String?
+  dateAdmission        DateTime
+  dateSortiePrevue     DateTime?
+  dateSortieReelle     DateTime?
+  motifAdmission       String
+  diagnosticPrincipal  String?
+  statut               String    @default("en_cours")
+  createdAt            DateTime  @default(now())
+
+  patient            Patient           @relation(fields: [patientId], references: [id])
+  service            Service           @relation(fields: [serviceId], references: [id])
+  lit                Lit?              @relation(fields: [litId], references: [id])
+  prescriptions       Prescription[]
+  constantesVitales   ConstanteVitale[]
+  tourneePatients     TourneePatient[]
+  transmissions       Transmission[]
+  alertes             Alerte[]
+}
+
+model Prescription {
+  id                 Int       @id @default(autoincrement())
+  admissionId        Int
+  medecin            String
+  datePrescription   DateTime
+  dateFin            DateTime?
+  statut             String    @default("active")
+
+  admission   Admission             @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  medicaments PrescriptionMedicament[]
+}
+
+model PrescriptionMedicament {
+  id                   Int     @id @default(autoincrement())
+  prescriptionId       Int
+  medicamentNom        String
+  dosage               String
+  forme                String?
+  frequence            String
+  voieAdministration   String  @default("orale")
+  heurePrise           String?
+  dureeJours           Int?
+  instructions         String?
+
+  prescription Prescription @relation(fields: [prescriptionId], references: [id], onDelete: Cascade)
+  soins        Soin[]
+}
+
+model ConstanteVitale {
+  id                     Int      @id @default(autoincrement())
+  admissionId            Int
+  infirmierId            Int
+  dateMesure             DateTime
+  tensionSystolique      Int?
+  tensionDiastolique     Int?
+  frequenceCardiaque     Int?
+  frequenceRespiratoire  Int?
+  temperature            Float?
+  saturationO2           Float?
+  glycemie               Float?
+  poids                  Float?
+  notes                  String?
+
+  admission Admission @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  infirmier Infirmier @relation(fields: [infirmierId], references: [id])
+}
+
+model Tournee {
+  id            Int      @id @default(autoincrement())
+  serviceId     Int
+  infirmierId   Int
+  dateTournee   DateTime
+  heureDebut    String?
+  heureFin      String?
+  quart         String
+  statut        String   @default("planifiee")
+  notes         String?
+
+  service   Service          @relation(fields: [serviceId], references: [id])
+  infirmier Infirmier        @relation(fields: [infirmierId], references: [id])
+  patients  TourneePatient[]
+
+  @@unique([serviceId, infirmierId, dateTournee, quart])
+}
+
+model TourneePatient {
+  id            Int      @id @default(autoincrement())
+  tourneeId     Int
+  admissionId   Int
+  ordreVisite   Int?
+  statutVisite  String   @default("en_attente")
+  heureVisite   String?
+  notesVisite   String?
+
+  tournee   Tournee   @relation(fields: [tourneeId], references: [id], onDelete: Cascade)
+  admission Admission @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  soins     Soin[]
+
+  @@unique([tourneeId, admissionId])
+}
+
+model Soin {
+  id                          Int       @id @default(autoincrement())
+  tourneePatientId            Int
+  infirmierId                 Int
+  typeSoin                    String
+  categorie                   String    @default("autre")
+  heureRealisation            DateTime
+  realise                     Boolean   @default(false)
+  motifNonRealise             String?
+  observations                String?
+  prescriptionMedicamentId    Int?
+
+  tourneePatient          TourneePatient           @relation(fields: [tourneePatientId], references: [id], onDelete: Cascade)
+  infirmier                Infirmier                @relation(fields: [infirmierId], references: [id])
+  prescriptionMedicament   PrescriptionMedicament?  @relation(fields: [prescriptionMedicamentId], references: [id])
+}
+
+model Transmission {
+  id                Int      @id @default(autoincrement())
+  admissionId       Int
+  infirmierId       Int
+  dateTransmission  DateTime @default(now())
+  quart             String
+  contenu           String
+  priorite          String   @default("normale")
+  lue               Boolean  @default(false)
+
+  admission Admission @relation(fields: [admissionId], references: [id], onDelete: Cascade)
+  infirmier Infirmier @relation(fields: [infirmierId], references: [id])
+}
+
+model Alerte {
+  id               Int       @id @default(autoincrement())
+  admissionId      Int?
+  infirmierId      Int?
+  typeAlerte       String
+  message          String
+  priorite         String    @default("normale")
+  statut           String    @default("non_lue")
+  dateAlerte       DateTime  @default(now())
+  dateTraitement   DateTime?
+
+  admission Admission? @relation(fields: [admissionId], references: [id])
+  infirmier Infirmier? @relation(fields: [infirmierId], references: [id])
+}
+
+// ============================================================
+// SOINELY — bibliothèque IDEL (landing page produit)
+// ============================================================
+
+model IdelUser {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique
+  passwordHash  String
+  nom           String
+  prenom        String
+  cabinetId     Int?
+  cabinetRole   String?
+  createdAt     DateTime @default(now())
+
+  cabinet   Cabinet? @relation(fields: [cabinetId], references: [id])
+  favoris   Favori[]
+}
+
+model Cabinet {
+  id              Int      @id @default(autoincrement())
+  nom             String
+  codeInvitation  String   @unique
+  createdAt       DateTime @default(now())
+
+  membres   IdelUser[]
+  partages  CabinetFiche[]
+}
+
+model Hub {
+  id          Int    @id @default(autoincrement())
+  slug        String @unique
+  nom         String
+  description String
+  icone       String
+  ordre       Int    @default(0)
+
+  fiches Fiche[]
+}
+
+model Fiche {
+  id           Int      @id @default(autoincrement())
+  hubId        Int
+  slug         String
+  titre        String
+  resume       String
+  contenu      String
+  tags         String   @default("")
+  dureeLecture Int      @default(3)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  hub       Hub            @relation(fields: [hubId], references: [id], onDelete: Cascade)
+  favoris   Favori[]
+  missions  MissionFiche[]
+  cabinets  CabinetFiche[]
+  dailyTips DailyTip[]
+
+  @@unique([hubId, slug])
+}
+
+model Mission {
+  id          Int    @id @default(autoincrement())
+  slug        String @unique
+  titre       String
+  description String
+  icone       String
+  ordre       Int    @default(0)
+
+  fiches MissionFiche[]
+}
+
+model MissionFiche {
+  id        Int @id @default(autoincrement())
+  missionId Int
+  ficheId   Int
+  ordre     Int @default(0)
+
+  mission Mission @relation(fields: [missionId], references: [id], onDelete: Cascade)
+  fiche   Fiche   @relation(fields: [ficheId], references: [id], onDelete: Cascade)
+
+  @@unique([missionId, ficheId])
+}
+
+model Favori {
+  id         Int      @id @default(autoincrement())
+  idelUserId Int
+  ficheId    Int
+  createdAt  DateTime @default(now())
+
+  idelUser IdelUser @relation(fields: [idelUserId], references: [id], onDelete: Cascade)
+  fiche    Fiche    @relation(fields: [ficheId], references: [id], onDelete: Cascade)
+
+  @@unique([idelUserId, ficheId])
+}
+
+model CabinetFiche {
+  id        Int      @id @default(autoincrement())
+  cabinetId Int
+  ficheId   Int
+  createdAt DateTime @default(now())
+
+  cabinet Cabinet @relation(fields: [cabinetId], references: [id], onDelete: Cascade)
+  fiche   Fiche   @relation(fields: [ficheId], references: [id], onDelete: Cascade)
+
+  @@unique([cabinetId, ficheId])
+}
+
+model DailyTip {
+  id      Int    @id @default(autoincrement())
+  type    String @default("recommandation")
+  titre   String
+  contenu String
+  ficheId Int?
+  ordre   Int    @default(0)
+
+  fiche Fiche? @relation(fields: [ficheId], references: [id])
+}
