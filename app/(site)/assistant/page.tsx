@@ -18,8 +18,8 @@ export default function AssistantPage() {
       <div className="mt-4 flex items-start gap-2 rounded-xl border border-warning/30 bg-warning/10 p-4 text-sm text-navy-900">
         <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-warning" />
         <p>
-          Version de démonstration : une recherche par mots-clés dans les fiches SOINELY, pas une
-          intelligence artificielle générative.
+          Les réponses sont générées par une IA à partir des fiches SOINELY. Elles peuvent contenir des
+          erreurs — vérifiez toujours les informations importantes auprès d'un professionnel de santé.
         </p>
       </div>
 
