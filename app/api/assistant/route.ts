@@ -31,14 +31,29 @@ function getAllFiches() {
 }
 
 export async function POST(req: NextRequest) {
-  const { question } = await req.json();
+  let question: unknown;
+  try {
+    ({ question } = await req.json());
+  } catch {
+    return NextResponse.json({ error: "invalid body" }, { status: 400 });
+  }
+
   const q = (question ?? "").toString().trim();
 
   if (!q) {
     return NextResponse.json({ answer: "Posez-moi une question sur un soin, un protocole ou un thème.", sources: [] });
   }
 
-  const fiches = await getAllFiches();
+  let fiches: Awaited<ReturnType<typeof getAllFiches>>;
+  try {
+    fiches = await getAllFiches();
+  } catch {
+    return NextResponse.json({
+      answer: "L'assistant est momentanément indisponible (connexion à la base de données). Réessayez dans un instant.",
+      sources: [],
+    });
+  }
+
   const matches = findRelevantFiches(q, fiches);
   const sources = matches.map(({ fiche }) => ({
     titre: fiche.titre,

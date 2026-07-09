@@ -23,15 +23,29 @@ export default function AssistantChat() {
     setQuestion("");
     setLoading(true);
 
-    const res = await fetch("/api/assistant", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ question: q }),
-    });
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/assistant", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: q }),
+      });
 
-    setTurns((prev) => [...prev, { question: q, answer: data.answer, sources: data.sources ?? [] }]);
-    setLoading(false);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+
+      setTurns((prev) => [...prev, { question: q, answer: data.answer, sources: data.sources ?? [] }]);
+    } catch {
+      setTurns((prev) => [
+        ...prev,
+        {
+          question: q,
+          answer: "Désolé, une erreur est survenue en contactant l'assistant. Réessayez dans un instant.",
+          sources: [],
+        },
+      ]);
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
