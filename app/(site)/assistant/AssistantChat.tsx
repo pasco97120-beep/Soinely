@@ -1,8 +1,22 @@
 "use client";
 
-import { useState, FormEvent } from "react";
+import { useEffect, useRef, useState, FormEvent } from "react";
 import Link from "next/link";
-import { Send, Link2 } from "lucide-react";
+import { Send, Link2, Mic, MicOff } from "lucide-react";
+
+// Dictée vocale via l'API Web Speech du navigateur (aucune donnée envoyée à un
+// service tiers : la reconnaissance tourne côté navigateur). Support limité à
+// Chrome/Edge (webkitSpeechRecognition) ; le bouton reste masqué ailleurs.
+type SpeechRecognitionLike = {
+  lang: string;
+  continuous: boolean;
+  interimResults: boolean;
+  onresult: ((event: any) => void) | null;
+  onerror: ((event: any) => void) | null;
+  onend: (() => void) | null;
+  start: () => void;
+  stop: () => void;
+};
 
 type Turn = {
   question: string;
@@ -14,6 +28,44 @@ export default function AssistantChat({ initialQuestion }: { initialQuestion?: s
   const [question, setQuestion] = useState(initialQuestion ?? "");
   const [turns, setTurns] = useState<Turn[]>([]);
   const [loading, setLoading] = useState(false);
+  const [listening, setListening] = useState(false);
+  const [micSupported, setMicSupported] = useState(false);
+  const recognitionRef = useRef<SpeechRecognitionLike | null>(null);
+
+  useEffect(() => {
+    const SpeechRecognitionCtor =
+      (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+    setMicSupported(Boolean(SpeechRecognitionCtor));
+  }, []);
+
+  function toggleDictation() {
+    const SpeechRecognitionCtor =
+      (window as any).SpeechRecognition ?? (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognitionCtor) return;
+
+    if (listening) {
+      recognitionRef.current?.stop();
+      return;
+    }
+
+    const recognition: SpeechRecognitionLike = new SpeechRecognitionCtor();
+    recognition.lang = "fr-FR";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onresult = (event) => {
+      const transcript = Array.from(event.results as any)
+        .map((r: any) => r[0].transcript)
+        .join(" ");
+      setQuestion((prev) => (prev ? `${prev} ${transcript}` : transcript));
+    };
+    recognition.onerror = () => setListening(false);
+    recognition.onend = () => setListening(false);
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setListening(true);
+  }
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
@@ -81,9 +133,23 @@ export default function AssistantChat({ initialQuestion }: { initialQuestion?: s
         <input
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
-          placeholder="Exemple : que faire en cas d'hypoglycémie ?"
+          placeholder={listening ? "Je vous écoute…" : "Exemple : que faire en cas d'hypoglycémie ?"}
           className="flex-1 bg-transparent px-3 text-sm outline-none"
         />
+        {micSupported && (
+          <button
+            type="button"
+            onClick={toggleDictation}
+            title={listening ? "Arrêter la dictée" : "Dicter ma question au micro"}
+            className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border transition ${
+              listening
+                ? "animate-pulse border-red-500 bg-red-500 text-white"
+                : "border-border text-muted-foreground hover:border-primary-500 hover:text-primary-600"
+            }`}
+          >
+            {listening ? <MicOff className="h-4 w-4" /> : <Mic className="h-4 w-4" />}
+          </button>
+        )}
         <button
           type="submit"
           disabled={loading}
