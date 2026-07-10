@@ -39,3 +39,26 @@ export function parseFicheContenu(contenu: string): FicheParcours {
     reste: matchedAny ? rest.join("\n") : contenu,
   };
 }
+
+export type FicheExemple = { titre: string; corps: string };
+
+// Découpe le champ Fiche.exemple (modèles prêts à l'emploi, ex. courriers de liaison) en
+// blocs indépendants, chacun introduit par une ligne "## Titre".
+export function parseExemples(exemple: string | null | undefined): FicheExemple[] {
+  if (!exemple) return [];
+
+  const blocks: FicheExemple[] = [];
+  let current: FicheExemple | null = null;
+
+  for (const raw of exemple.split("\n")) {
+    if (raw.startsWith("## ")) {
+      if (current) blocks.push(current);
+      current = { titre: raw.slice(3).trim(), corps: "" };
+      continue;
+    }
+    if (current) current.corps += (current.corps ? "\n" : "") + raw;
+  }
+  if (current) blocks.push(current);
+
+  return blocks.map((b) => ({ titre: b.titre, corps: b.corps.trim() }));
+}

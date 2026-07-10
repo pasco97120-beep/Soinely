@@ -3,12 +3,13 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getHubIcon } from "@/lib/hub-icons";
 import { getIdelUser } from "@/lib/idel-session";
-import { parseFicheContenu } from "@/lib/fiche-content";
+import { parseFicheContenu, parseExemples } from "@/lib/fiche-content";
 import { toNiveauPriorite } from "@/lib/priorite";
 import { isModeTournee } from "@/lib/mode-tournee";
 import { toStatutFiche } from "@/lib/statut";
 import { cn } from "@/lib/utils";
 import FicheActions from "@/components/FicheActions";
+import FicheExemples from "@/components/FicheExemples";
 import ParcoursClinique from "@/components/ParcoursClinique";
 import TrustCenter from "@/components/TrustCenter";
 import { Card } from "@/components/Card";
@@ -69,6 +70,7 @@ export default async function FicheDetailPage({
   const Icon = getHubIcon(hub.icone);
   const tags = fiche.tags.split(",").map((t) => t.trim()).filter(Boolean);
   const parcours = parseFicheContenu(fiche.contenu);
+  const exemples = parseExemples(fiche.exemple);
   const priorite = toNiveauPriorite(fiche.priorite);
   const tournee = isModeTournee();
 
@@ -143,28 +145,31 @@ export default async function FicheDetailPage({
             </div>
           ),
           realiser: (
-            <Card accent="primary">
-              <p className={cn("flex items-center gap-2 font-heading font-bold text-navy-900", tournee ? "text-base" : "text-sm")}>
-                <Stethoscope className="h-4 w-4 text-primary-600" />
-                Procédure
-              </p>
-              {parcours.pointsCles.length > 0 ? (
-                <ol className="mt-3 flex flex-col gap-3">
-                  {parcours.pointsCles.map((item, i) => (
-                    <li key={i} className="flex items-start gap-3">
-                      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-xs font-semibold text-primary-600">
-                        {i + 1}
-                      </span>
-                      <span className={cn("leading-relaxed text-navy-900", tournee ? "text-base" : "text-sm")}>{item}</span>
-                    </li>
-                  ))}
-                </ol>
-              ) : (
-                <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-navy-900">
-                  {parcours.reste || "Aucune procédure détaillée pour cette fiche."}
+            <div className="flex flex-col gap-4">
+              <Card accent="primary">
+                <p className={cn("flex items-center gap-2 font-heading font-bold text-navy-900", tournee ? "text-base" : "text-sm")}>
+                  <Stethoscope className="h-4 w-4 text-primary-600" />
+                  Procédure
                 </p>
-              )}
-            </Card>
+                {parcours.pointsCles.length > 0 ? (
+                  <ol className="mt-3 flex flex-col gap-3">
+                    {parcours.pointsCles.map((item, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-primary-500/15 text-xs font-semibold text-primary-600">
+                          {i + 1}
+                        </span>
+                        <span className={cn("leading-relaxed text-navy-900", tournee ? "text-base" : "text-sm")}>{item}</span>
+                      </li>
+                    ))}
+                  </ol>
+                ) : (
+                  <p className="mt-3 whitespace-pre-line text-sm leading-relaxed text-navy-900">
+                    {parcours.reste || "Aucune procédure détaillée pour cette fiche."}
+                  </p>
+                )}
+              </Card>
+              {exemples.length > 0 && <FicheExemples exemples={exemples} />}
+            </div>
           ),
           securiser: (
             <div className="flex flex-col gap-4">

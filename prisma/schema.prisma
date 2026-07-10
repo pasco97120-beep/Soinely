@@ -272,6 +272,7 @@ model IdelUser {
   favoris       Favori[]
   consultations Consultation[]
   signalements  Signalement[]
+  clients       Client[]
 }
 
 model Cabinet {
@@ -302,6 +303,9 @@ model Fiche {
   titre        String
   resume       String
   contenu      String
+  // Modèles concrets prêts à l'emploi (ex. courriers de liaison) — un ou plusieurs blocs
+  // séparés par des titres "## Titre", affichés avec copie en un clic sur la fiche.
+  exemple      String?
   tags         String   @default("")
   // Niveau de priorité clinique SCR-003 : information | vigilance | action | urgente
   priorite     String   @default("information")
@@ -399,6 +403,37 @@ model CabinetFiche {
   fiche   Fiche   @relation(fields: [ficheId], references: [id], onDelete: Cascade)
 
   @@unique([cabinetId, ficheId])
+}
+
+// Dossier client IDEL (patientèle de la tournée en libéral) — distinct du modèle
+// Patient hospitalier ci-dessus. Un client appartient à l'IDEL qui l'a créé.
+model Client {
+  id             Int       @id @default(autoincrement())
+  idelUserId     Int
+  nom            String
+  prenom         String
+  dateNaissance  DateTime?
+  adresse        String?
+  telephone      String?
+  notes          String?
+  createdAt      DateTime  @default(now())
+
+  idelUser  IdelUser         @relation(fields: [idelUserId], references: [id], onDelete: Cascade)
+  documents ClientDocument[]
+}
+
+// Pièce du dossier client capturée au téléphone (ordonnance, carte Vitale, etc.).
+// Stockée directement en base (data URL) : pas d'infrastructure de stockage fichiers
+// supplémentaire à ce stade — à faire évoluer vers un stockage objet si le volume grossit.
+model ClientDocument {
+  id        Int      @id @default(autoincrement())
+  clientId  Int
+  type      String // prescription | carte_vitale | autre
+  label     String?
+  dataUrl   String
+  createdAt DateTime @default(now())
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
 }
 
 model DailyTip {

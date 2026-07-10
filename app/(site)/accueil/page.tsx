@@ -16,6 +16,7 @@ import {
   BookOpen,
   LayoutGrid,
   History,
+  Users,
 } from "lucide-react";
 
 function greeting() {
@@ -30,7 +31,7 @@ export default async function AccueilPage() {
   if (!idelUser) redirect("/connexion");
   const tournee = isModeTournee();
 
-  const [favoris, hubs, dailyTip, derniereConsultation] = await Promise.all([
+  const [favoris, hubs, dailyTip, derniereConsultation, clientsCount] = await Promise.all([
     prisma.favori.findMany({
       where: { idelUserId: idelUser.id },
       orderBy: { createdAt: "desc" },
@@ -44,6 +45,7 @@ export default async function AccueilPage() {
       orderBy: { consultedAt: "desc" },
       include: { fiche: { include: { hub: true } } },
     }),
+    prisma.client.count({ where: { idelUserId: idelUser.id } }),
   ]);
 
   return (
@@ -206,6 +208,26 @@ export default async function AccueilPage() {
             )}
             <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary-600">
               Demander au Copilote
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+
+          {/* Mes clients — dossiers de la tournée (ordonnances, carte Vitale) */}
+          <Link
+            href="/clients"
+            className="rounded-lg border border-border bg-card p-5 transition hover:border-primary-500 hover:shadow-md"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-navy-950 text-primary-400">
+              <Users className="h-5 w-5" />
+            </div>
+            <p className="mt-3 font-heading font-bold text-navy-900">Mes clients</p>
+            <p className="mt-1 text-sm text-muted-foreground">
+              {clientsCount > 0
+                ? `${clientsCount} dossier${clientsCount > 1 ? "s" : ""} — ordonnances, carte Vitale`
+                : "Créez un dossier et photographiez vos documents"}
+            </p>
+            <span className="mt-3 inline-flex items-center gap-1 text-sm font-medium text-primary-600">
+              Accéder
               <ArrowRight className="h-4 w-4" />
             </span>
           </Link>
