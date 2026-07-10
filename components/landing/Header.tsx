@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { HeartPulse, UserCircle } from "lucide-react";
+import { HeartPulse, UserCircle, LogOut } from "lucide-react";
 import ModeTourneeToggle from "@/components/ModeTourneeToggle";
+import { signOut } from "@/auth";
 
 const links = [
   { href: "/missions", label: "Missions" },
@@ -58,6 +59,20 @@ export default function Header({
               >
                 Bonjour, {idelUser.prenom}
               </Link>
+              <form
+                action={async () => {
+                  "use server";
+                  await signOut({ redirectTo: "/" });
+                }}
+              >
+                <button
+                  type="submit"
+                  title="Déconnexion"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-danger hover:text-danger"
+                >
+                  <LogOut className="h-4 w-4" />
+                </button>
+              </form>
             </>
           ) : (
             <>
