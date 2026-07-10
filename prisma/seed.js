@@ -1,5 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcryptjs");
+const { FICHES_CONTENU } = require("./fiches-contenu");
 
 const prisma = new PrismaClient();
 const DEMO_PASSWORD = "soinely2026";
@@ -324,7 +325,7 @@ async function seedContent(passwordHash) {
     return "information";
   };
 
-  const contenuType = (titre) =>
+  const contenuFallback = (titre) =>
     [
       `Objectif`,
       `Cette fiche pose les repères généraux autour de « ${titre.toLowerCase()} ».`,
@@ -350,7 +351,7 @@ async function seedContent(passwordHash) {
           slug,
           titre: f.titre,
           resume: f.resume,
-          contenu: contenuType(f.titre),
+          contenu: FICHES_CONTENU[`${hubSlug}/${slug}`] || contenuFallback(f.titre),
           tags: f.tags,
           priorite: inferPrioriteSeed(f.titre, f.resume, f.tags),
           // Contenu d'exemple non relu par un professionnel de santé : jamais "valide" par défaut.

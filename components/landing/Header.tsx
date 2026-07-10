@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { HeartPulse, Sparkles, UserCircle } from "lucide-react";
+import { HeartPulse, UserCircle } from "lucide-react";
 import ModeTourneeToggle from "@/components/ModeTourneeToggle";
 
 const links = [
@@ -40,14 +40,6 @@ export default function Header({
         </nav>
 
         <div className="flex items-center gap-2">
-          <Link
-            href="/assistant"
-            className="hidden items-center gap-1.5 rounded-full border border-primary-200 bg-primary-50 px-3 py-1.5 text-sm font-medium text-primary-600 sm:flex"
-          >
-            <Sparkles className="h-3.5 w-3.5 text-gold-500" />
-            Assistant IA
-          </Link>
-
           {idelUser ? (
             <>
               <div className="hidden sm:block">
