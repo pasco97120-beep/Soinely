@@ -74,9 +74,15 @@ export async function POST(req: NextRequest) {
 
   const systemPrompt =
     "Tu es l'assistant SOINELY, une bibliothèque de ressources pour infirmiers et infirmières libéraux (IDEL). " +
-    "Réponds en français, de façon claire et concise, en t'appuyant en priorité sur les fiches SOINELY fournies ci-dessous. " +
-    "Si les fiches fournies ne couvrent pas la question, tu peux répondre avec tes connaissances générales, mais précise alors clairement que ce n'est pas issu du contenu SOINELY. " +
-    "Pour toute question clinique précise (dosages, seuils, décisions médicales), rappelle que ta réponse est informative et qu'elle doit être validée par un professionnel de santé ou le médecin traitant avant application.";
+    "Tu réponds à des professionnels pressés, en tournée, souvent sur mobile : va droit au but. " +
+    "Structure TOUJOURS ta réponse ainsi, sans titres ni Markdown : " +
+    "1) une phrase de réponse directe à la question posée ; " +
+    "2) si utile, une liste de points clés introduits par un tiret « - », un point par ligne, courts et actionnables ; " +
+    "3) si pertinent, une dernière ligne commençant par « Alerte : » ou « À savoir : » pour un point de vigilance. " +
+    "Appuie-toi en priorité sur les fiches SOINELY fournies ci-dessous, sans les recopier telles quelles. " +
+    "Si elles ne couvrent pas la question, réponds avec tes connaissances générales en le précisant clairement. " +
+    "Reste bref (6 lignes maximum) : une réponse courte et claire vaut mieux qu'une réponse exhaustive. " +
+    "Pour toute question clinique précise (dosages, seuils, décisions médicales), rappelle en une courte phrase finale que la réponse est informative et doit être validée par un professionnel de santé ou le médecin traitant.";
 
   const userPrompt = `Fiches SOINELY pertinentes :\n\n${context}\n\nQuestion de l'utilisateur : ${q}`;
 
@@ -94,6 +100,7 @@ export async function POST(req: NextRequest) {
           { role: "user", content: userPrompt },
         ],
         temperature: 0.3,
+        max_tokens: 500,
       }),
     });
 
@@ -116,7 +123,9 @@ export async function POST(req: NextRequest) {
 
 function fallbackAnswer(
   q: string,
-  matches: { fiche: { titre: string; resume: string; slug: string; hub: { nom: string; slug: string } } }[]
+  matches: {
+    fiche: { titre: string; resume: string; contenu: string; slug: string; hub: { nom: string; slug: string } };
+  }[]
 ) {
   const sources = matches.map(({ fiche }) => ({
     titre: fiche.titre,
@@ -131,9 +140,16 @@ function fallbackAnswer(
     };
   }
 
-  const answer =
-    `Voici ce que j'ai retrouvé dans SOINELY à propos de « ${q} » :\n\n` +
-    matches.map(({ fiche }) => `- ${fiche.titre} — ${fiche.resume}`).join("\n");
+  // Sans réponse générée par le modèle, on affiche directement le contenu structuré
+  // (Objectif / Points clés / Quand alerter) de la fiche la plus pertinente : c'est plus
+  // clair et plus directement actionnable qu'une simple liste de titres et de résumés.
+  const top = matches[0].fiche;
+  const rest = matches.slice(1);
+
+  let answer = `Sur « ${top.titre.toLowerCase()} » :\n\n${top.contenu}`;
+  if (rest.length > 0) {
+    answer += `\n\nAutres fiches liées :\n` + rest.map(({ fiche }) => `- ${fiche.titre}`).join("\n");
+  }
 
   return { answer, sources };
 }

@@ -51,7 +51,7 @@ export default function Hero() {
             <Image
               src="/images/hero-idel.png"
               alt="Infirmière libérale consultant SOINELY sur tablette"
-              width={836}
+              width={976}
               height={1024}
               priority
               className="h-auto w-full"

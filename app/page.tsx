@@ -10,6 +10,7 @@ import CabinetSection from "@/components/landing/CabinetSection";
 import AISection from "@/components/landing/AISection";
 import DailySection from "@/components/landing/DailySection";
 import StatsSection from "@/components/landing/StatsSection";
+import CommencerSection from "@/components/landing/CommencerSection";
 import Footer from "@/components/landing/Footer";
 
 export default async function Home() {
@@ -29,6 +30,7 @@ export default async function Home() {
       <AISection />
       <DailySection />
       <StatsSection />
+      <CommencerSection />
       <Footer />
     </div>
   );
