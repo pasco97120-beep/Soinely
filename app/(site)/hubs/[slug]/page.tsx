@@ -22,7 +22,7 @@ export default async function HubDetailPage({ params }: { params: { slug: string
       </Link>
 
       <div className="mt-4 flex items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-navy-950 text-primary-400">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-navy-950 text-primary-400">
           <Icon className="h-7 w-7" />
         </div>
         <div>
@@ -36,7 +36,7 @@ export default async function HubDetailPage({ params }: { params: { slug: string
           <Link
             key={fiche.id}
             href={`/hubs/${hub.slug}/${fiche.slug}`}
-            className="rounded-xl border border-border bg-card p-5 transition hover:border-primary-500 hover:shadow-md"
+            className="rounded-lg border border-border bg-card p-5 transition hover:border-primary-500 hover:shadow-md"
           >
             <p className="font-medium text-navy-900">{fiche.titre}</p>
             <p className="mt-1 text-sm text-muted-foreground">{fiche.resume}</p>

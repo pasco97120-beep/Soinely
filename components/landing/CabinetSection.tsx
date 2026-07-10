@@ -19,8 +19,8 @@ export default function CabinetSection() {
   return (
     <section id="cabinet" className="mx-auto max-w-6xl px-6 py-20">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-        <div className="rounded-2xl border border-border bg-card p-8">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-500/10 text-primary-600">
+        <div className="rounded-lg border border-border bg-card p-8">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-500/10 text-primary-600">
             <Building className="h-5 w-5" />
           </div>
           <h3 className="mt-4 text-xl font-semibold text-navy-900">Mon Cabinet</h3>
@@ -44,8 +44,8 @@ export default function CabinetSection() {
           </Link>
         </div>
 
-        <div className="rounded-2xl border border-border bg-navy-950 p-8 text-white">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10">
+        <div className="rounded-lg border border-border bg-navy-950 p-8 text-white">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/10">
             <Users2 className="h-5 w-5 text-primary-400" />
           </div>
           <h3 className="mt-4 text-xl font-semibold">Mon Équipe</h3>

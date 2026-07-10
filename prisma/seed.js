@@ -311,6 +311,19 @@ async function seedContent(passwordHash) {
     ],
   };
 
+  // Miroir de lib/priorite.ts#inferPriorite — volontairement limité à titre/résumé/tags
+  // (pas contenu, qui partage un texte de sécurité générique sur toutes les fiches).
+  const inferPrioriteSeed = (titre, resume, tags) => {
+    const t = `${titre} ${resume} ${tags}`
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[̀-ͯ]/g, "");
+    if (/(urgence|urgent|detresse|arret|choc|hemorragie)/.test(t)) return "urgente";
+    if (/(risque|attention|vigilance|surveiller|complication)/.test(t)) return "action";
+    if (/(verifier|controler|prudence|contre-indication)/.test(t)) return "vigilance";
+    return "information";
+  };
+
   const contenuType = (titre) =>
     [
       `Objectif`,
@@ -339,6 +352,9 @@ async function seedContent(passwordHash) {
           resume: f.resume,
           contenu: contenuType(f.titre),
           tags: f.tags,
+          priorite: inferPrioriteSeed(f.titre, f.resume, f.tags),
+          // Contenu d'exemple non relu par un professionnel de santé : jamais "valide" par défaut.
+          statut: "en_revision",
           dureeLecture: 3,
         },
       });

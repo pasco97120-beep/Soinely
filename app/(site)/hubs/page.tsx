@@ -25,10 +25,10 @@ export default async function HubsPage() {
             <Link
               key={hub.id}
               href={`/hubs/${hub.slug}`}
-              className="rounded-2xl border border-border bg-card p-6 transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
+              className="rounded-lg border border-border bg-card p-6 transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-navy-950 text-primary-400">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg bg-navy-950 text-primary-400">
                   <Icon className="h-5 w-5" />
                 </div>
                 <div>

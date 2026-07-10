@@ -64,7 +64,7 @@ export default function HubsSection() {
             <Link
               key={label}
               href={`/hubs/${slug}`}
-              className="flex items-center gap-3 rounded-xl border border-border bg-card p-4 transition hover:border-primary-500 hover:shadow-md"
+              className="flex items-center gap-3 rounded-lg border border-border bg-card p-4 transition hover:border-primary-500 hover:shadow-md"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-navy-950 text-primary-400">
                 <Icon className="h-5 w-5" />

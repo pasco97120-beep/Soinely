@@ -32,9 +32,9 @@ export default function LoginPage() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-navy-950 px-4">
-      <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-navy-900 p-8 shadow-2xl">
+      <div className="w-full max-w-sm rounded-lg border border-white/10 bg-navy-900 p-8 shadow-2xl">
         <div className="mb-6 flex flex-col items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-500">
             <HeartPulse className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-xl font-semibold text-white">SOINELY</h1>

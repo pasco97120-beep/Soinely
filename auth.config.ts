@@ -1,7 +1,7 @@
 import type { NextAuthConfig } from "next-auth";
 
 const hospitalPrefixes = ["/dashboard", "/patients", "/tournees", "/transmissions", "/alertes"];
-const idelAuthPrefixes = ["/cabinet", "/equipe"];
+const idelAuthPrefixes = ["/cabinet", "/equipe", "/accueil", "/profil"];
 
 export default {
   pages: { signIn: "/login" },
@@ -17,7 +17,7 @@ export default {
         return true;
       }
       if (path === "/connexion" || path === "/inscription") {
-        if (isLoggedIn && accountType === "idel") return Response.redirect(new URL("/cabinet", nextUrl));
+        if (isLoggedIn && accountType === "idel") return Response.redirect(new URL("/accueil", nextUrl));
         return true;
       }
 

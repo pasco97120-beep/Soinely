@@ -33,7 +33,7 @@ export default function CabinetJoinCreate() {
   }
 
   return (
-    <div className="rounded-xl border border-border bg-card p-5">
+    <div className="rounded-lg border border-border bg-card p-5">
       <p className="text-sm font-medium text-navy-900">Vous n'appartenez à aucun cabinet</p>
       <p className="mt-1 text-sm text-muted-foreground">
         Créez votre cabinet pour partager des ressources avec votre équipe, ou rejoignez-en un existant.

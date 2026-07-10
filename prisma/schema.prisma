@@ -268,8 +268,10 @@ model IdelUser {
   cabinetRole   String?
   createdAt     DateTime @default(now())
 
-  cabinet   Cabinet? @relation(fields: [cabinetId], references: [id])
-  favoris   Favori[]
+  cabinet       Cabinet? @relation(fields: [cabinetId], references: [id])
+  favoris       Favori[]
+  consultations Consultation[]
+  signalements  Signalement[]
 }
 
 model Cabinet {
@@ -301,15 +303,22 @@ model Fiche {
   resume       String
   contenu      String
   tags         String   @default("")
+  // Niveau de priorité clinique SCR-003 : information | vigilance | action | urgente
+  priorite     String   @default("information")
+  // Statut de validation éditoriale — Trust Center™ (Master Book Vol.6 Ch.2) :
+  // valide | en_revision | a_mettre_a_jour | archive
+  statut       String   @default("en_revision")
   dureeLecture Int      @default(3)
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  hub       Hub            @relation(fields: [hubId], references: [id], onDelete: Cascade)
-  favoris   Favori[]
-  missions  MissionFiche[]
-  cabinets  CabinetFiche[]
-  dailyTips DailyTip[]
+  hub           Hub            @relation(fields: [hubId], references: [id], onDelete: Cascade)
+  favoris       Favori[]
+  missions      MissionFiche[]
+  cabinets      CabinetFiche[]
+  dailyTips     DailyTip[]
+  consultations Consultation[]
+  signalements  Signalement[]
 
   @@unique([hubId, slug])
 }
@@ -347,6 +356,37 @@ model Favori {
   fiche    Fiche    @relation(fields: [ficheId], references: [id], onDelete: Cascade)
 
   @@unique([idelUserId, ficheId])
+}
+
+// Historique de consultation — alimente "Reprendre mon activité" (SCR-001) et
+// "Historique" (Profil, Master Book Vol.3 Ch.6). Une ligne par (utilisateur, fiche),
+// mise à jour à chaque nouvelle visite plutôt qu'un journal illimité.
+model Consultation {
+  id          Int      @id @default(autoincrement())
+  idelUserId  Int
+  ficheId     Int
+  consultedAt DateTime @default(now())
+
+  idelUser IdelUser @relation(fields: [idelUserId], references: [id], onDelete: Cascade)
+  fiche    Fiche    @relation(fields: [ficheId], references: [id], onDelete: Cascade)
+
+  @@unique([idelUserId, ficheId])
+}
+
+// Signalements — Trust Center™ (Master Book Vol.6 Ch.2) : "Chaque utilisateur peut
+// contribuer à l'amélioration de la plateforme." Aucune UI d'administration pour l'instant :
+// les signalements sont capturés et consultables directement en base par l'équipe éditoriale.
+model Signalement {
+  id         Int      @id @default(autoincrement())
+  ficheId    Int
+  idelUserId Int
+  type       String // erreur | amelioration | lien_inactif | autre
+  message    String
+  statut     String   @default("nouveau") // nouveau | traite
+  createdAt  DateTime @default(now())
+
+  fiche    Fiche    @relation(fields: [ficheId], references: [id], onDelete: Cascade)
+  idelUser IdelUser @relation(fields: [idelUserId], references: [id], onDelete: Cascade)
 }
 
 model CabinetFiche {

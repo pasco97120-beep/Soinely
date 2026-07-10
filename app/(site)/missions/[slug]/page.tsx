@@ -27,7 +27,7 @@ export default async function MissionDetailPage({ params }: { params: { slug: st
       </Link>
 
       <div className="mt-4 flex items-center gap-4">
-        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-primary-500/10 text-primary-600">
+        <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-primary-500/10 text-primary-600">
           <Icon className="h-7 w-7" />
         </div>
         <div>
@@ -41,7 +41,7 @@ export default async function MissionDetailPage({ params }: { params: { slug: st
           <Link
             key={fiche.id}
             href={`/hubs/${fiche.hub.slug}/${fiche.slug}`}
-            className="rounded-xl border border-border bg-card p-5 transition hover:border-primary-500 hover:shadow-md"
+            className="rounded-lg border border-border bg-card p-5 transition hover:border-primary-500 hover:shadow-md"
           >
             <p className="text-xs font-medium uppercase tracking-wide text-primary-600">{fiche.hub.nom}</p>
             <p className="mt-1 font-medium text-navy-900">{fiche.titre}</p>

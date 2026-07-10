@@ -43,7 +43,7 @@ export default function CabinetFichesList({ items }: { items: CabinetFiche[] }) 
   return (
     <div className="flex flex-col gap-3">
       {items.map(({ fiche }) => (
-        <div key={fiche.id} className="flex items-start justify-between gap-3 rounded-xl border border-border bg-card p-4">
+        <div key={fiche.id} className="flex items-start justify-between gap-3 rounded-lg border border-border bg-card p-4">
           <Link href={`/hubs/${fiche.hub.slug}/${fiche.slug}`} className="flex-1">
             <p className="text-xs font-medium uppercase tracking-wide text-primary-600">{fiche.hub.nom}</p>
             <p className="mt-1 font-medium text-navy-900">{fiche.titre}</p>

@@ -13,8 +13,8 @@
   --accent-foreground: 222 47% 11%;
   --border: 214 32% 91%;
   --input: 214 32% 91%;
-  --ring: 330 78% 47%;
-  --radius: 0.65rem;
+  --ring: 226 76% 55%;
+  --radius: 1rem; /* Design System™ Ch.4 — 16px pour cartes, boutons, champs */
 }
 
 .dark {
@@ -28,7 +28,7 @@
   --accent-foreground: 210 40% 98%;
   --border: 217 33% 18%;
   --input: 217 33% 18%;
-  --ring: 330 78% 55%;
+  --ring: 226 76% 60%;
 }
 
 * {
@@ -38,4 +38,9 @@
 body {
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
+}
+
+/* Design Book™ Ch.2 : une seule famille de police (Inter, héritée de body) pour tout le site. */
+h1, h2, h3, h4 {
+  letter-spacing: -0.01em;
 }

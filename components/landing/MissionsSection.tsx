@@ -27,9 +27,9 @@ export default function MissionsSection() {
           <Link
             key={label}
             href={`/missions/${slug}`}
-            className="group flex flex-col items-center gap-3 rounded-2xl border border-border bg-card p-6 text-center transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
+            className="group flex flex-col items-center gap-3 rounded-lg border border-border bg-card p-6 text-center transition hover:-translate-y-1 hover:border-primary-500 hover:shadow-lg"
           >
-            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-50 text-primary-600 group-hover:bg-primary-500 group-hover:text-white">
+            <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-50 text-primary-600 group-hover:bg-primary-500 group-hover:text-white">
               <Icon className="h-6 w-6" />
             </div>
             <p className="text-sm font-medium text-navy-900">{label}</p>

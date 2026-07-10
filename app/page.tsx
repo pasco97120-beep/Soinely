@@ -1,4 +1,5 @@
 import { auth } from "@/auth";
+import { isModeTournee } from "@/lib/mode-tournee";
 import Header from "@/components/landing/Header";
 import Hero from "@/components/landing/Hero";
 import SearchSection from "@/components/landing/SearchSection";
@@ -18,7 +19,7 @@ export default async function Home() {
 
   return (
     <div>
-      <Header idelUser={idelUser} />
+      <Header idelUser={idelUser} modeTournee={isModeTournee()} />
       <Hero />
       <SearchSection />
       <ConceptSection />

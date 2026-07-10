@@ -43,15 +43,15 @@ export default function InscriptionPage() {
       router.push("/connexion");
       return;
     }
-    router.push("/cabinet");
+    router.push("/accueil");
     router.refresh();
   }
 
   return (
     <div className="flex min-h-[calc(100vh-4rem)] items-center justify-center bg-muted/30 px-4 py-16">
-      <div className="w-full max-w-md rounded-2xl border border-border bg-card p-8 shadow-xl">
+      <div className="w-full max-w-md rounded-lg border border-border bg-card p-8 shadow-xl">
         <div className="mb-6 flex flex-col items-center gap-2">
-          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary-500">
             <HeartPulse className="h-6 w-6 text-white" />
           </div>
           <h1 className="text-xl font-semibold text-navy-900">Rejoindre SOINELY</h1>

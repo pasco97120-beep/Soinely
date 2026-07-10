@@ -27,7 +27,7 @@ export default function AISection() {
 
         <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {capabilities.map(({ icon: Icon, label, desc }) => (
-            <div key={label} className="rounded-2xl border border-white/10 bg-white/5 p-5">
+            <div key={label} className="rounded-lg border border-white/10 bg-white/5 p-5">
               <Icon className="h-5 w-5 text-primary-400" />
               <p className="mt-3 font-medium">{label}</p>
               <p className="mt-1 text-sm text-navy-300">{desc}</p>

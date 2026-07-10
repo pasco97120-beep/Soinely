@@ -33,9 +33,9 @@ export default async function DailyPage() {
         <h1 className="mt-2 text-3xl font-semibold text-navy-900">Le rappel du jour</h1>
       </div>
 
-      <div className="mt-8 rounded-2xl border border-border bg-card p-8">
+      <div className="mt-8 rounded-lg border border-border bg-card p-8">
         <div className="flex items-center gap-3">
-          <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-primary-500/10 text-primary-600">
+          <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-primary-500/10 text-primary-600">
             {today.type === "le_saviez_vous" ? <Brain className="h-5 w-5" /> : <BookOpen className="h-5 w-5" />}
           </div>
           <p className="text-sm font-medium text-primary-600">
@@ -59,7 +59,7 @@ export default async function DailyPage() {
         <p className="mb-3 text-sm font-medium text-navy-900">Les autres rappels</p>
         <div className="flex flex-col gap-2">
           {others.map((tip) => (
-            <div key={tip.id} className="rounded-xl border border-border bg-card p-4">
+            <div key={tip.id} className="rounded-lg border border-border bg-card p-4">
               <p className="text-xs font-medium text-primary-600">
                 {tip.type === "le_saviez_vous" ? "Le saviez-vous ?" : "Recommandation"}
               </p>

@@ -24,7 +24,7 @@ export default async function EquipePage() {
       <h1 className="mt-2 text-3xl font-semibold text-navy-900">{idelUser.cabinet?.nom}</h1>
 
       {idelUser.cabinetRole === "proprietaire" && (
-        <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-card px-4 py-3 text-sm">
+        <div className="mt-4 flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-3 text-sm">
           <KeyRound className="h-4 w-4 text-primary-500" />
           Code d'invitation : <span className="font-mono font-semibold text-navy-900">{idelUser.cabinet?.codeInvitation}</span>
         </div>
