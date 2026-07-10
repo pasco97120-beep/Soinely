@@ -1,5 +1,6 @@
 import Link from "next/link";
-import { ArrowRight, PlayCircle, ShieldCheck, BadgeCheck, Sparkles, HeartPulse } from "lucide-react";
+import Image from "next/image";
+import { ArrowRight, PlayCircle, ShieldCheck, Sparkles } from "lucide-react";
 
 export default function Hero() {
   return (
@@ -46,19 +47,15 @@ export default function Hero() {
         </div>
 
         <div className="relative">
-          <div className="relative mx-auto flex aspect-square max-w-sm items-center justify-center overflow-hidden rounded-[2.5rem] border border-white/10 bg-gradient-to-br from-navy-800 to-navy-900 p-8 shadow-2xl">
-            <div className="flex h-24 w-24 items-center justify-center rounded-full bg-primary-500/20">
-              <HeartPulse className="h-12 w-12 text-primary-400" />
-            </div>
-
-            <div className="absolute left-4 top-4 flex items-center gap-2 rounded-lg border border-white/10 bg-navy-900 px-3 py-2 text-xs text-white shadow-lg">
-              <BadgeCheck className="h-4 w-4 shrink-0 text-success" />
-              +250 fiches pratiques
-            </div>
-            <div className="absolute bottom-4 right-4 flex items-center gap-2 rounded-lg border border-white/10 bg-navy-900 px-3 py-2 text-xs text-white shadow-lg">
-              <ShieldCheck className="h-4 w-4 shrink-0 text-info" />
-              20 thématiques clés
-            </div>
+          <div className="relative mx-auto max-w-md overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl">
+            <Image
+              src="/images/hero-idel.png"
+              alt="Infirmière libérale consultant SOINELY sur tablette"
+              width={836}
+              height={1024}
+              priority
+              className="h-auto w-full"
+            />
           </div>
 
           <div className="mx-auto mt-8 max-w-xs rounded-lg border border-white/10 bg-white p-4 shadow-xl">
