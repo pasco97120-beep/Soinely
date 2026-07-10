@@ -5,9 +5,16 @@ import { ArrowRight, PlayCircle, ShieldCheck, Sparkles } from "lucide-react";
 export default function Hero() {
   return (
     <section className="relative overflow-hidden bg-navy-950 pb-28 sm:pb-32">
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        <div className="absolute -left-24 -top-24 h-96 w-96 rounded-full bg-primary-500/20 blur-3xl" />
-        <div className="absolute -right-24 top-1/3 h-96 w-96 rounded-full bg-navy-500/30 blur-3xl" />
+      <div className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/hero-idel.png"
+          alt="Infirmière libérale consultant SOINELY sur tablette"
+          fill
+          priority
+          className="object-cover object-[75%_center] opacity-90"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-navy-950 via-navy-950/85 to-navy-950/10" />
+        <div className="absolute inset-0 bg-gradient-to-t from-navy-950 via-transparent to-navy-950/40" />
       </div>
 
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 px-6 pt-20 lg:grid-cols-2 lg:gap-12 lg:pt-28">
@@ -47,18 +54,7 @@ export default function Hero() {
         </div>
 
         <div className="relative">
-          <div className="relative mx-auto max-w-md overflow-hidden rounded-[2.5rem] border border-white/10 shadow-2xl">
-            <Image
-              src="/images/hero-idel.png"
-              alt="Infirmière libérale consultant SOINELY sur tablette"
-              width={976}
-              height={1024}
-              priority
-              className="h-auto w-full"
-            />
-          </div>
-
-          <div className="mx-auto mt-8 max-w-xs rounded-lg border border-white/10 bg-white p-4 shadow-xl">
+          <div className="mx-auto max-w-xs rounded-lg border border-white/10 bg-white p-4 shadow-xl lg:ml-auto lg:mt-64">
             <div className="mb-2 flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-success" />
               <p className="text-sm font-medium text-navy-900">
