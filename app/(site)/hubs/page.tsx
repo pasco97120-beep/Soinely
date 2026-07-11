@@ -1,11 +1,15 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getHubIcon } from "@/lib/hub-icons";
+import { RefreshCcw } from "lucide-react";
 
 export default async function HubsPage() {
   const hubs = await prisma.hub.findMany({
     orderBy: { ordre: "asc" },
-    include: { _count: { select: { fiches: true } } },
+    include: {
+      _count: { select: { fiches: true } },
+      fiches: { select: { updatedAt: true } },
+    },
   });
 
   return (
@@ -21,6 +25,10 @@ export default async function HubsPage() {
       <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {hubs.map((hub, i) => {
           const Icon = getHubIcon(hub.icone);
+          const derniereMaj = hub.fiches.reduce<Date | null>(
+            (max, f) => (!max || f.updatedAt > max ? f.updatedAt : max),
+            null
+          );
           return (
             <Link
               key={hub.id}
@@ -37,7 +45,15 @@ export default async function HubsPage() {
                 </div>
               </div>
               <p className="mt-3 text-sm text-muted-foreground">{hub.description}</p>
-              <p className="mt-3 text-xs font-medium text-primary-600">{hub._count.fiches} fiche(s)</p>
+              <div className="mt-3 flex items-center justify-between gap-2">
+                <p className="text-xs font-medium text-primary-600">{hub._count.fiches} fiche(s)</p>
+                {derniereMaj && (
+                  <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <RefreshCcw className="h-3 w-3" />
+                    {new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "short" }).format(derniereMaj)}
+                  </p>
+                )}
+              </div>
             </Link>
           );
         })}

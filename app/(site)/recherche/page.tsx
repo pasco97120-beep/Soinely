@@ -6,7 +6,8 @@ import { getHubIcon } from "@/lib/hub-icons";
 import { isModeTournee } from "@/lib/mode-tournee";
 import { parseFicheContenu } from "@/lib/fiche-content";
 import { PrioriteBadge } from "@/components/Badge";
-import { Search, Clock, BookOpen, Sparkles, ChevronRight, AlertTriangle, Zap } from "lucide-react";
+import SearchField from "@/components/SearchField";
+import { Clock, BookOpen, Sparkles, ChevronRight, AlertTriangle, Zap } from "lucide-react";
 
 export default async function RecherchePage({
   searchParams,
@@ -46,12 +47,10 @@ export default async function RecherchePage({
 
       <form action="/recherche" method="GET" className="mt-5 flex items-center gap-3">
         <div className="flex flex-1 items-center gap-3 rounded-lg border border-border bg-card px-4 py-3 focus-within:ring-2 focus-within:ring-primary-500">
-          <Search className="h-4 w-4 shrink-0 text-muted-foreground" />
-          <input
+          <SearchField
             name="q"
             defaultValue={q}
             placeholder="Ex : perfusion douloureuse, hypoglycémie, AMI 4..."
-            className="flex-1 bg-transparent text-sm outline-none"
             autoFocus
           />
         </div>

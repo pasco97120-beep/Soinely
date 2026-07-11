@@ -5,8 +5,8 @@ import { getIdelUser } from "@/lib/idel-session";
 import { getHubIcon } from "@/lib/hub-icons";
 import { isModeTournee } from "@/lib/mode-tournee";
 import { cn } from "@/lib/utils";
+import SearchField from "@/components/SearchField";
 import {
-  Search,
   Heart,
   Sparkles,
   Building,
@@ -66,12 +66,7 @@ export default async function AccueilPage() {
       {/* Recherche universelle */}
       <form action="/recherche" method="GET" className="mt-6">
         <div className="flex items-center gap-3 rounded-lg border border-border bg-card px-4 py-3.5 shadow-sm transition focus-within:border-primary-500 focus-within:ring-2 focus-within:ring-primary-500/30">
-          <Search className="h-5 w-5 shrink-0 text-muted-foreground" />
-          <input
-            name="q"
-            placeholder="Rechercher un protocole, une situation clinique..."
-            className="flex-1 bg-transparent text-sm outline-none sm:text-base"
-          />
+          <SearchField name="q" placeholder="Rechercher un protocole, une situation clinique..." />
           <button
             type="submit"
             className="shrink-0 rounded-lg bg-primary-500 px-4 py-2 text-sm font-medium text-white hover:bg-primary-600"
