@@ -7,7 +7,8 @@ import { formatDateTime } from "@/lib/utils";
 import { Card, PageHeader } from "@/components/Card";
 import FavorisList from "@/components/FavorisList";
 import ModeTourneeToggle from "@/components/ModeTourneeToggle";
-import { UserCircle, Heart, SlidersHorizontal, History } from "lucide-react";
+import ProfilPhoto from "@/components/ProfilPhoto";
+import { Heart, SlidersHorizontal, History } from "lucide-react";
 
 export default async function ProfilPage() {
   const idelUser = await getIdelUser();
@@ -32,16 +33,9 @@ export default async function ProfilPage() {
       <PageHeader title="Profil" subtitle="Votre identité, vos préférences et vos favoris." />
 
       <div className="flex flex-col gap-6">
-        <Card className="flex items-center gap-4">
-          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-lg bg-navy-950 text-primary-400">
-            <UserCircle className="h-7 w-7" />
-          </span>
-          <div>
-            <p className="font-heading font-bold text-navy-900">
-              {idelUser.prenom} {idelUser.nom}
-            </p>
-            <p className="text-sm text-muted-foreground">{idelUser.email}</p>
-          </div>
+        <Card>
+          <ProfilPhoto photoUrl={idelUser.photoUrl} prenom={idelUser.prenom} nom={idelUser.nom} />
+          <p className="mt-3 text-sm text-muted-foreground">{idelUser.email}</p>
         </Card>
 
         <Card>

@@ -264,6 +264,7 @@ model IdelUser {
   passwordHash  String
   nom           String
   prenom        String
+  photoUrl      String?
   cabinetId     Int?
   cabinetRole   String?
   createdAt     DateTime @default(now())

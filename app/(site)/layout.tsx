@@ -1,12 +1,11 @@
-import { auth } from "@/auth";
 import { isModeTournee } from "@/lib/mode-tournee";
+import { getIdelUser } from "@/lib/idel-session";
 import Header from "@/components/landing/Header";
 import Footer from "@/components/landing/Footer";
 
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const session = await auth();
-  const user = session?.user as any;
-  const idelUser = user?.accountType === "idel" ? { prenom: user.name?.split(" ")[0] ?? "" } : null;
+  const user = await getIdelUser();
+  const idelUser = user ? { prenom: user.prenom, nom: user.nom, photoUrl: user.photoUrl } : null;
 
   return (
     <div className="flex min-h-screen flex-col">

@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { HeartPulse, UserCircle, LogOut } from "lucide-react";
+import { HeartPulse, LogOut } from "lucide-react";
 import ModeTourneeToggle from "@/components/ModeTourneeToggle";
+import { Avatar } from "@/components/Avatar";
 import { signOut } from "@/auth";
 
 const links = [
@@ -14,7 +15,7 @@ export default function Header({
   idelUser,
   modeTournee,
 }: {
-  idelUser: { prenom: string } | null;
+  idelUser: { prenom: string; nom: string; photoUrl: string | null } | null;
   modeTournee: boolean;
 }) {
   return (
@@ -49,9 +50,9 @@ export default function Header({
               <Link
                 href="/profil"
                 title="Profil"
-                className="hidden h-9 w-9 items-center justify-center rounded-full border border-border text-muted-foreground hover:border-primary-500 hover:text-primary-600 sm:flex"
+                className="hidden overflow-hidden rounded-full ring-1 ring-border transition hover:ring-primary-500 sm:block"
               >
-                <UserCircle className="h-5 w-5" />
+                <Avatar photoUrl={idelUser.photoUrl} prenom={idelUser.prenom} nom={idelUser.nom} size="sm" />
               </Link>
               <Link
                 href="/accueil"
